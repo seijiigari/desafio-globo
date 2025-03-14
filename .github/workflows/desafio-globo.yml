@@ -1,0 +1,40 @@
+name: esteira-desafio-globo
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+jobs:
+    terraform:
+        name: Terraform plan e terraform apply
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: obter-codigo
+              uses: actions/checkout@v3
+
+            - name: Configurando terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: 1.11.0
+
+            - name: Terraform init
+              run: terraform init
+
+            - name: Validacao
+              run: terraform validate
+            
+            - name: Planejamento
+              run: terraform plan
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            
+            - name: Terraform Apply
+              if: github.ref == 'refs/heads/main'
+              run: terraform apply -auto-approve 
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
