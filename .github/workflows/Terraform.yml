@@ -24,6 +24,13 @@ jobs:
               run: terraform init
               working-directory: ./Infra
 
+            - name: Terminando infra
+              run: terraform destroy -auto-approve
+              working-directory: ./Infra
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
             - name: Validacao
               run: terraform validate
               working-directory: ./Infra
