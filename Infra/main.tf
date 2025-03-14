@@ -229,7 +229,7 @@ root_block_device {
               echo "${filebase64("${path.module}/../templates/datetime.html")}" | base64 --decode > /app/python-app/templates/datetime.html
               echo "${filebase64("${path.module}/../templates/index.html")}" | base64 --decode > /app/python-app/templates/index.html
               sed -i "s/endpoint-redis/${aws_elasticache_cluster.app_cache.cache_nodes[0].address}/g" /app/python-app/main.py
-              sudo apt install python3-flask python3-flask-caching -y
+              sudo apt install python3-flask python3-flask-caching python3-redis -y
               cd /app/python-app
               python3 main.py &
               EOF
