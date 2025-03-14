@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data e Hora Atual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20%;
+            font-size: 24px;
+        }
+    </style>
+    <script>
+        function obterHoraComCache() {
+            // Verifica se há uma hora armazenada no localStorage
+            let horaCache = localStorage.getItem('horaCache');
+            let tempoCache = localStorage.getItem('tempoCache');
+    
+            // Obtém o tempo atual em milissegundos
+            const agora = new Date().getTime();
+    
+            // Verifica se o cache existe e se ainda é válido (3 minutos = 180000 ms)
+            if (horaCache && tempoCache && (agora - tempoCache < 180000)) {
+                // Retorna a hora armazenada no cache
+                return horaCache;
+            } else {
+                // Se o cache expirou ou não existe, obtém a nova hora
+                const novaHora = new Date().toLocaleString('pt-BR', {
+                    dateStyle: 'full',
+                    timeStyle: 'short'
+                });
+    
+                // Armazena a nova hora e o tempo atual no localStorage
+                localStorage.setItem('horaCache', novaHora);
+                localStorage.setItem('tempoCache', agora);
+    
+                // Retorna a nova hora
+                return novaHora;
+            }
+        }
+    
+        function exibirHora() {
+            // Obtém a hora (com cache de 3 minutos)
+            const hora = obterHoraComCache();
+    
+            // Exibe a hora no elemento HTML
+            document.getElementById('dataHora').textContent = hora;
+        }
+    
+        // Exibe a hora quando a página é carregada
+        window.onload = exibirHora;
+    </script>
+</head>
+<body>
+    <h1>Data e Hora Atual</h1>
+    <p id="dataHora"></p>
+</body>
+</html>
